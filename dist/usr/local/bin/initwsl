@@ -15,7 +15,7 @@ chmod +x /usr/sbin/policy-rc.d
 dpkg-divert --local --rename --add /sbin/initctl
 ln -fs /bin/true /sbin/initctl
 clear
-rm /usr/bin/systemctl ; cd / ; tar xf /etc/systemctl-service-shim.tar
+# rm /usr/bin/systemctl ; cd / ; tar xf /etc/systemctl-service-shim.tar
 
 # Remove services not needed in WSL1
 update-rc.d -f consolesetup.sh remove >/dev/null 2>&1
