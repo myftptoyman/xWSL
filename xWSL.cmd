@@ -3,7 +3,7 @@ IF %ERRORLEVEL% == 0 (ECHO Administrator check passed...) ELSE (ECHO You need to
 
 COLOR 1F
 SET DISTRO=UbuntuWSL
-SET GITORG=DesktopECHO
+SET GITORG=myftptoyman
 SET GITPRJ=xWSL
 SET BRANCH=master
 SET BASE=https://github.com/%GITORG%/%GITPRJ%/raw/%BRANCH%
