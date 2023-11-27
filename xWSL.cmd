@@ -68,7 +68,7 @@ ECHO [%TIME:~0,8%] APT update and clone repo (~3m00s)
 %GO% "echo 'deb http://archive.ubuntu.com/ubuntu/ jammy main restricted universe' > /etc/apt/sources.list"
 %GO% "echo 'deb http://archive.ubuntu.com/ubuntu/ jammy-updates main restricted universe' >> /etc/apt/sources.list"
 %GO% "echo 'deb http://security.ubuntu.com/ubuntu/ jammy-security main restricted universe' >> /etc/apt/sources.list"
-%GO% "rm -rf /etc/apt/apt.conf.d/20snapd.conf /etc/systemd/system/snap* /var/cache/snapd /etc/rc2.d/S01whoopsie /etc/init.d/console-setup.sh ; echo 'echo 1' > /usr/sbin/runlevel"
+REM %GO% "rm -rf /etc/apt/apt.conf.d/20snapd.conf /etc/systemd/system/snap* /var/cache/snapd /etc/rc2.d/S01whoopsie /etc/init.d/console-setup.sh ; echo 'echo 1' > /usr/sbin/runlevel"
 START /MIN "Move Icons..." %GO% "mv /usr/share/icons $PWD ; rm -rf /usr/share/icons ; ln -s $PWD/icons /usr/share/icons"
 START /MIN /WAIT "Git clone..." %GO% "cd /tmp ; git clone -b %BRANCH% --depth=1 https://github.com/%GITORG%/%GITPRJ%.git"
 %GO% "mv /tmp/xWSL/dist/etc/dpkg/dpkg.cfg.d/01_nodoc /etc/dpkg/dpkg.cfg.d ; dpkg -i /tmp/xWSL/deb/python*.deb /tmp/xWSL/deb/gzip_1.10-4ubuntu1_amd64.deb /tmp/xWSL/deb/aria2_1.36.0-1_amd64.deb /tmp/xWSL/deb/libaria2-0_1.36.0-1_amd64.deb /tmp/xWSL/deb/libc-ares2_1.18.1-1build1_amd64.deb /tmp/xWSL/deb/libssh2-1_1.10.0-3_amd64.deb ; pip3 install apt-select ; chmod +x /tmp/xWSL/dist/usr/local/bin/apt-fast ; cp -p /tmp/xWSL/dist/usr/local/bin/apt-fast /usr/local/bin" > ".\logs\%TIME:~0,2%%TIME:~3,2%%TIME:~6,2% Configure apt-fast Downloader.log" 2>&1
@@ -114,8 +114,8 @@ IF %LINDPI% LSS 120 ( %GO% "sed -i 's/Default-hdpi/Default/g' /tmp/xWSL/dist/etc
 %GO% "cp /mnt/c/Windows/Fonts/*.ttf /usr/share/fonts/truetype ; ssh-keygen -A ; adduser xrdp ssl-cert" > NUL
 %GO% "chmod 644 /tmp/xWSL/dist/etc/wsl.conf ; chmod 644 /tmp/xWSL/dist/var/lib/xrdp-pulseaudio-installer/*.so"
 %GO% "chmod 755 /tmp/xWSL/dist/etc/profile.d/xWSL.sh /tmp/xWSL/dist/usr/local/bin/restartwsl /tmp/xWSL/dist/usr/local/bin/initwsl /tmp/xWSL/dist/etc/init.d/xrdp ; chmod -R 700 /tmp/xWSL/dist/etc/skel/.config ; chmod -R 7700 /tmp/xWSL/dist/etc/skel/.local ; chmod 700 /tmp/xWSL/dist/etc/skel/.mozilla ; chmod +x /tmp/xWSL/dist/etc/skel/Desktop/Falkon.desktop ; chmod +x /tmp/xWSL/dist/etc/skel/Desktop/Seamonkey.desktop"
-%GO% "rm /usr/lib/systemd/system/dbus-org.freedesktop.login1.service /usr/share/dbus-1/system-services/org.freedesktop.login1.service /usr/share/polkit-1/actions/org.freedesktop.login1.policy"
-%GO% "rm /usr/share/dbus-1/services/org.freedesktop.systemd1.service /usr/share/dbus-1/system-services/org.freedesktop.systemd1.service /usr/share/dbus-1/system.d/org.freedesktop.systemd1.conf /usr/share/polkit-1/actions/org.freedesktop.systemd1.policy /usr/share/applications/gksu.desktop"
+REM %GO% "rm /usr/lib/systemd/system/dbus-org.freedesktop.login1.service /usr/share/dbus-1/system-services/org.freedesktop.login1.service /usr/share/polkit-1/actions/org.freedesktop.login1.policy"
+REM %GO% "rm /usr/share/dbus-1/services/org.freedesktop.systemd1.service /usr/share/dbus-1/system-services/org.freedesktop.systemd1.service /usr/share/dbus-1/system.d/org.freedesktop.systemd1.conf /usr/share/polkit-1/actions/org.freedesktop.systemd1.policy /usr/share/applications/gksu.desktop"
 %GO% "cp -Rp /tmp/xWSL/dist/* / ; cp -Rp /tmp/xWSL/dist/etc/skel/.config /root ; cp -Rp /tmp/xWSL/dist/etc/skel/.local /root ; chown -R xrdp:root /etc/xrdp ; update-rc.d xrdp defaults"
 
 SET RUNEND=%date% @ %time:~0,5%
