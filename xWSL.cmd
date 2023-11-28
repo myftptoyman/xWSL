@@ -26,7 +26,7 @@ IF EXIST "%DISTRO%" (ECHO. & ECHO Folder exists with that name, choose a new fol
 WSL.EXE -d %DISTRO% -e . > "%TEMP%\InstCheck.tmp"
 FOR /f %%i in ("%TEMP%\InstCheck.tmp") do set CHKIN=%%~zi 
 IF %CHKIN% == 0 (ECHO. & ECHO There is a WSL distribution registered with that name; uninstall it or choose a new name. & PAUSE & GOTO DI)
-SET RDPPRT=3399& SET /p RDPPRT=Port number for xRDP traffic or hit Enter to use default [3399]: 
+SET RDPPRT=3390& SET /p RDPPRT=Port number for xRDP traffic or hit Enter to use default [3390]: 
 SET SSHPRT=3322& SET /p SSHPRT=Port number for SSHd traffic or hit Enter to use default [3322]: 
                  SET /p WINDPI=Set a custom DPI scale, or hit Enter for Windows default [%WINDPI%]: 
 FOR /f "delims=" %%a in ('PowerShell -Command "%WINDPI% * 96" ') do set "LINDPI=%%a"
@@ -72,7 +72,7 @@ REM %GO% "rm -rf /etc/apt/apt.conf.d/20snapd.conf /etc/systemd/system/snap* /var
 START /MIN "Move Icons..." %GO% "mv /usr/share/icons $PWD ; rm -rf /usr/share/icons ; ln -s $PWD/icons /usr/share/icons"
 START /MIN /WAIT "Git clone..." %GO% "cd /tmp ; git clone -b %BRANCH% --depth=1 https://github.com/%GITORG%/%GITPRJ%.git"
 %GO% "mv /tmp/xWSL/dist/etc/dpkg/dpkg.cfg.d/01_nodoc /etc/dpkg/dpkg.cfg.d ; dpkg -i /tmp/xWSL/deb/python*.deb /tmp/xWSL/deb/gzip_1.10-4ubuntu1_amd64.deb /tmp/xWSL/deb/aria2_1.36.0-1_amd64.deb /tmp/xWSL/deb/libaria2-0_1.36.0-1_amd64.deb /tmp/xWSL/deb/libc-ares2_1.18.1-1build1_amd64.deb /tmp/xWSL/deb/libssh2-1_1.10.0-3_amd64.deb ; pip3 install apt-select ; chmod +x /tmp/xWSL/dist/usr/local/bin/apt-fast ; cp -p /tmp/xWSL/dist/usr/local/bin/apt-fast /usr/local/bin" > ".\logs\%TIME:~0,2%%TIME:~3,2%%TIME:~6,2% Configure apt-fast Downloader.log" 2>&1
-START /MIN /WAIT "Remove un-needed packages..." %GO% "apt-mark hold sudo ; DEBIAN_FRONTEND=noninteractive apt-get -y purge needrestart apparmor* bc* bcache-tools* bolt* btrfs-progs* busybox-initramfs* cloud-guest-utils* cloud-init* cloud-initramfs-copymods* cloud-initramfs-dyn-netconf* cryptsetup* cryptsetup-initramfs* dmeventd* eject* ethtool* fdisk* finalrd* fonts-ubuntu-console* fwupd* fwupd-signed* gdisk* initramfs-tools* initramfs-tools-bin* initramfs-tools-core* iputils-ping* irqbalance* isc-dhcp-client* isc-dhcp-common* klibc-utils* kpartx* landscape-common* libaio1* libarchive13* libatasmart4* libblockdev-crypto2* libblockdev-fs2* libblockdev-loop2* libblockdev-part-err2* libblockdev-part2* libblockdev-swap2* libblockdev-utils2* libblockdev2* libdevmapper-event1.02.1* libdns-export1110* libdrm-common* libdrm2* libefiboot1* libefivar1* libfdisk1* libflashrom1* libfreetype6* libftdi1-2* libfwupd2* libfwupdplugin5* libgcab-1.0-0* libgpgme11* libgusb2* libinih1* libisc-export1105* libisns0* libjcat1* libjson-glib-1.0-0* libjson-glib-1.0-common* libklibc* liblvm2cmd2.03* liblzo2-2* libmbim-glib4* libmbim-proxy* libmm-glib0* libmspack0* libnetplan0* libnspr4* libnss3* libnuma1* libopeniscsiusr* libparted-fs-resize0* libplymouth5* libpng16-16* libqmi-glib5* libqmi-proxy* libsgutils2-2* libsmbios-c2* libtcl8.6* libtss2-esys-3.0.2-0* libtss2-mu0* libtss2-sys1* libtss2-tcti-cmd0* libtss2-tcti-device0* libtss2-tcti-mssim0* libtss2-tcti-swtpm0* libudisks2-0* liburcu8* libvolume-key1* libxmlsec1* libxmlsec1-openssl* libxslt1.1* linux-base* lvm2* lxd-agent-loader* mdadm* modemmanager* multipath-tools* netcat-openbsd* netplan.io* open-iscsi* open-vm-tools* overlayroot* plymouth* plymouth-theme-ubuntu-text* sbsigntool* secureboot-db* sg3-utils* snapd* sosreport* squashfs-tools* tcl* tcl8.6* thin-provisioning-tools* tpm-udev* ubuntu-minimal* ubuntu-server* udisks2* usb-modeswitch* usb-modeswitch-data* xfsprogs* zerofree* ; apt-mark unhold sudo ; apt-get -y install acl ; echo 'exit 0' > /bin/setfacl ; add-apt-repository -y ppa:kisak/kisak-mesa ; add-apt-repository -y ppa:xubuntu-dev/staging"
+START /MIN /WAIT "Remove un-needed packages..." %GO% "apt-get -y install acl ; echo 'exit 0' > /bin/setfacl ; add-apt-repository -y ppa:kisak/kisak-mesa ; add-apt-repository -y ppa:xubuntu-dev/staging"
 
 :APTRELY
 START /MIN /WAIT "Find best mirror..." %GO% "MyIP=$(curl -m 10 -s ifconfig.me) ; MyCountry=$(curl -m 10 -s ipinfo.io/$MyIP/country) ; echo Region: $MyCountry ; apt-select -C $MyCountry ; mv sources.list /etc/apt/ ; apt-get update 2> /tmp/apterr"
@@ -91,7 +91,7 @@ REM ## %GO% "cd /tmp ; wget https://dl2.tlauncher.org/f.php?f=files%2FTLauncher-
 REM ## %GO% "apt-get -y install openjdk-17-jdk"
 
 ECHO [%TIME:~0,8%] Post-install clean-up     (~0m45s)
-%GO% "apt-get -y purge --autoremove apparmor needrestart gnustep-base-runtime gnustep-base-common gnustep-common libobjc4 powermgmt-base unar ; apt-get clean" > ".\logs\%TIME:~0,2%%TIME:~3,2%%TIME:~6,2% Post-install clean-up.log"
+%GO% "apt-get clean" > ".\logs\%TIME:~0,2%%TIME:~3,2%%TIME:~6,2% Post-install clean-up.log"
 
 %GO% "which schtasks.exe" > "%TEMP%\SCHT.tmp" & set /p SCHT=<"%TEMP%\SCHT.tmp"
 %GO% "sed -i 's#SCHT#%SCHT%#g' /tmp/xWSL/dist/usr/local/bin/restartwsl ; sed -i 's#DISTRO#%DISTRO%#g' /tmp/xWSL/dist/usr/local/bin/restartwsl"
@@ -110,7 +110,7 @@ IF %LINDPI% LSS 120 ( %GO% "sed -i 's/Default-hdpi/Default/g' /tmp/xWSL/dist/etc
 %GO% "sed -i 's/#Port 22/Port %SSHPRT%/g' /etc/ssh/sshd_config"
 %GO% "sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config"
 %GO% "sed -i 's/WSLINSTANCENAME/%DISTRO%/g' /tmp/xWSL/dist/usr/local/bin/initwsl"
-%GO% "sed -i 's/#enable-dbus=yes/enable-dbus=no/g' /etc/avahi/avahi-daemon.conf ; sed -i 's/#host-name=foo/host-name=%COMPUTERNAME%-%DISTRO%/g' /etc/avahi/avahi-daemon.conf ; sed -i 's/use-ipv4=yes/use-ipv4=no/g' /etc/avahi/avahi-daemon.conf"
+REM %GO% "sed -i 's/#enable-dbus=yes/enable-dbus=no/g' /etc/avahi/avahi-daemon.conf ;sed -i 's/#host-name=foo/host-name=%COMPUTERNAME%-%DISTRO%/g' /etc/avahi/avahi-daemon.conf ; sed -i 's/use-ipv4=yes/use-ipv4=no/g' /etc/avahi/avahi-daemon.conf"
 %GO% "cp /mnt/c/Windows/Fonts/*.ttf /usr/share/fonts/truetype ; ssh-keygen -A ; adduser xrdp ssl-cert" > NUL
 %GO% "chmod 644 /tmp/xWSL/dist/etc/wsl.conf ; chmod 644 /tmp/xWSL/dist/var/lib/xrdp-pulseaudio-installer/*.so"
 %GO% "chmod 755 /tmp/xWSL/dist/etc/profile.d/xWSL.sh /tmp/xWSL/dist/usr/local/bin/restartwsl /tmp/xWSL/dist/usr/local/bin/initwsl /tmp/xWSL/dist/etc/init.d/xrdp ; chmod -R 700 /tmp/xWSL/dist/etc/skel/.config ; chmod -R 7700 /tmp/xWSL/dist/etc/skel/.local ; chmod 700 /tmp/xWSL/dist/etc/skel/.mozilla ; chmod +x /tmp/xWSL/dist/etc/skel/Desktop/Falkon.desktop ; chmod +x /tmp/xWSL/dist/etc/skel/Desktop/Seamonkey.desktop"
